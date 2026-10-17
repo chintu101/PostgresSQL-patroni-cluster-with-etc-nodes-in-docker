@@ -1,0 +1,107 @@
+name: pg-lab
+
+x-pg-common: &pg-common
+  build: ./patroni
+  image: pg-lab-patroni
+  environment: &pg-env
+    POSTGRES_PASSWORD: lab-super-pw
+    REPLICATION_PASSWORD: lab-repl-pw
+  depends_on:
+    - etcd1
+    - etcd2
+    - etcd3
+  networks: [lab]
+  restart: unless-stopped
+  shm_size: 256mb
+
+services:
+  etcd1: &etcd
+    image: quay.io/coreos/etcd:v3.5.15
+    hostname: etcd1
+    command:
+      - etcd
+      - --name=etcd1
+      - --data-dir=/etcd-data
+      - --initial-advertise-peer-urls=http://etcd1:2380
+      - --listen-peer-urls=http://0.0.0.0:2380
+      - --listen-client-urls=http://0.0.0.0:2379
+      - --advertise-client-urls=http://etcd1:2379
+      - --initial-cluster=etcd1=http://etcd1:2380,etcd2=http://etcd2:2380,etcd3=http://etcd3:2380
+      - --initial-cluster-state=new
+      - --initial-cluster-token=pg-lab-etcd
+    networks: [lab]
+    restart: unless-stopped
+
+  etcd2:
+    <<: *etcd
+    hostname: etcd2
+    command:
+      - etcd
+      - --name=etcd2
+      - --data-dir=/etcd-data
+      - --initial-advertise-peer-urls=http://etcd2:2380
+      - --listen-peer-urls=http://0.0.0.0:2380
+      - --listen-client-urls=http://0.0.0.0:2379
+      - --advertise-client-urls=http://etcd2:2379
+      - --initial-cluster=etcd1=http://etcd1:2380,etcd2=http://etcd2:2380,etcd3=http://etcd3:2380
+      - --initial-cluster-state=new
+      - --initial-cluster-token=pg-lab-etcd
+
+  etcd3:
+    <<: *etcd
+    hostname: etcd3
+    command:
+      - etcd
+      - --name=etcd3
+      - --data-dir=/etcd-data
+      - --initial-advertise-peer-urls=http://etcd3:2380
+      - --listen-peer-urls=http://0.0.0.0:2380
+      - --listen-client-urls=http://0.0.0.0:2379
+      - --advertise-client-urls=http://etcd3:2379
+      - --initial-cluster=etcd1=http://etcd1:2380,etcd2=http://etcd2:2380,etcd3=http://etcd3:2380
+      - --initial-cluster-state=new
+      - --initial-cluster-token=pg-lab-etcd
+
+  pg1:
+    <<: *pg-common
+    hostname: pg1
+    environment:
+      <<: *pg-env
+      NODE_NAME: pg1
+    ports: ["5441:5432", "8081:8008"]
+
+  pg2:
+    <<: *pg-common
+    hostname: pg2
+    environment:
+      <<: *pg-env
+      NODE_NAME: pg2
+    ports: ["5442:5432", "8082:8008"]
+
+  pg3:
+    <<: *pg-common
+    hostname: pg3
+    environment:
+      <<: *pg-env
+      NODE_NAME: pg3
+    ports: ["5443:5432", "8083:8008"]
+
+  pg4:
+    <<: *pg-common
+    hostname: pg4
+    environment:
+      <<: *pg-env
+      NODE_NAME: pg4
+    ports: ["5444:5432", "8084:8008"]
+
+  pg5:
+    <<: *pg-common
+    hostname: pg5
+    environment:
+      <<: *pg-env
+      NODE_NAME: pg5
+    ports: ["5445:5432", "8085:8008"]
+
+networks:
+  lab:
+    driver: bridge
