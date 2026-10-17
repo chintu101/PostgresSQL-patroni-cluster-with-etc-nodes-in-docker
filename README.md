@@ -11,6 +11,32 @@ pg-lab/
     ├── Dockerfile            # installed a postgres 16 image with patroni
     └── patroni.yml.tpl       # generates patroni.yml from env vars, then starts Patroni
 ```
+## References
+
+### etcd
+
+- [etcd documentation](https://etcd.io/docs/)
+- [etcd GitHub repository](https://github.com/etcd-io/etcd)
+- [etcd clustering guide](https://etcd.io/docs/latest/op-guide/clustering/)
+- [etcd command-line flags](https://etcd.io/docs/latest/op-guide/configuration/)
+- [Raft consensus algorithm (paper)](https://raft.github.io/)
+
+### Patroni
+
+- [Patroni documentation](https://patroni.readthedocs.io/)
+- [Patroni GitHub repository](https://github.com/patroni/patroni)
+- [Patroni configuration reference](https://patroni.readthedocs.io/en/latest/patroni_configuration.html)
+- [Patroni REST API](https://patroni.readthedocs.io/en/latest/rest_api.html)
+- [patronictl command reference](https://patroni.readthedocs.io/en/latest/patronictl.html)
+
+### PostgreSQL
+
+- [PostgreSQL 16 documentation](https://www.postgresql.org/docs/16/)
+- [High availability, load balancing, and replication](https://www.postgresql.org/docs/16/high-availability.html)
+- [Streaming replication](https://www.postgresql.org/docs/16/warm-standby.html)
+- [pg_hba.conf reference](https://www.postgresql.org/docs/16/auth-pg-hba-conf.html)
+
+
 # Setup
 Creating the directory to work in
 ```bash
