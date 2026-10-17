@@ -191,7 +191,7 @@ x-pg-common: &pg-common
 
 ```yaml
 environment: &pg-env
-  POSTGRES_PASSWORD: lab-super-pw
+  POSTGRES_PASSWORD: lab-super-pw                    #this is the super user password used to access the leader node
   REPLICATION_PASSWORD: lab-repl-pw
 ```
 
